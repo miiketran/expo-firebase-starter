@@ -10,12 +10,62 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { TestComponent } from './../components/AppComponents';
+import * as firebase from 'firebase';
+import { Permissions, Notifications } from 'expo';
+import ApiKeys from '../constants/ApiKeys';
 
+// console.log(personRef);
 export default class TestScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
+  constructor(props) {
+    super(props);
+    // this.state = {
+    //   animals: [],
+    //   newAnimalName: '',
+    //   loading: false,
+    // };
+  }
+  componentDidMount() {
+    // animalRef.on('value', childSnapshot => {
+    //   const animals = [];
+    //   childSnapshot.forEach(doc => {
+    //     animals.push({
+    //       key: doc.key,
+    //       animalName: doc.toJSON().animalName,
+    //     });
+    //   });
+    // });
+    this.registerForPushNotifications();
+  }
+  // onPressAdd = () => {
+  //   if (this.state.newAnimalName.trim() === '') {
+  //     alert('animal name is blank');
+  //     return;
+  //   }
+  //   animalRef.push({ animalName: this.state.newAnimalName });
+  // };
+  registerForPushNotifications = async () => {
+    // CHeck for existing permissions...
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = status;
 
+    // If no existing permission, ask user for permission...
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+
+    // If no permission, exit the function...
+    if (finalStatus !== 'granted') {
+      return;
+    }
+    // Get push notification token...
+    let token = await Notification.getExpoPushTokenAsync();
+    console.log(token);
+    console.log('hi');
+  };
   render() {
     return (
       <View style={{ paddingTop: 30 }}>

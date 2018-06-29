@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
 import ApiKeys from './constants/ApiKeys';
 import * as firebase from 'firebase';
+import { AppProvider } from './context/app-context';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -28,10 +29,12 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <RootNavigation />
-        </View>
+        <AppProvider>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <RootNavigation />
+          </View>
+        </AppProvider>
       );
     }
   }
